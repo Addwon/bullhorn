@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>User Registration</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+</head>
+<body>
+<div th:replace="base :: navlinks"></div>
+<div class="container" >
+<h5>New User Registration</h5>
+
+<form autocomplete="off" action="#" th:action="@{/registration}" th:object="${user}" enctype="multipart/form-data" method="post">
+    First Name <mark><strong><span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name Error</span></strong></mark>
+                <input type="text" id="firstName" placeholder="First Name" th:field="*{firstName}"/><br />
+    Last Name <mark><strong><span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name Error</span></strong></mark>
+                <input type="text" id="lastName" placeholder="Last Name" th:field="*{lastName}"/><br />
+    Email <mark><strong><span th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</span></strong></mark>
+                <input type="text" id="email" placeholder="Email" th:field="*{email}"/><br />
+    Username <mark><strong><span th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username Error</span></strong></mark>
+                <input type="text" id="username" placeholder="Username" th:field="*{username}"/><br />
+    Password <mark><strong><span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</span></strong></mark>
+             <input type="password" id="password" placeholder="Password" th:field="*{password}"/><br />
+    <div class="col-3">
+        <label id="labelImage">Image</label>
+        <input type="file" name="file" />
+    </div><br/>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+</div>
+
+</body>
+
+</html>
