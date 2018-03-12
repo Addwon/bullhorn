@@ -15,6 +15,9 @@
                 <li class="nav-item active">
                     <a class="nav-link" href="/">Home</a>
                 </li>
+                <li class="nav-item active">
+                    <a class="nav-link" sec:authorize="isAuthenticated()" href="/userprofile">My profile</a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link" sec:authorize="isAnonymous()" href="/registration">Sign up</a>
                 </li>
@@ -28,5 +31,6 @@
         </nav>
     </div>
 </div>
+
 </body>
 </html>

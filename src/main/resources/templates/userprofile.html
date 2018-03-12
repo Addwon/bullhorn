@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>User profile</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+
+</head>
+<body>
+<div th:replace="base :: navlinks"></div>
+<div class="container">
+    <h5>Profile</h5>
+    <div class="card">
+        <div class="card-body">
+            <div th:each="user : ${user}">
+                <img class="img-rounded" th:src="${user.userImageUrl}" alt="User image" style="width:10%"/><br/>
+                <Span th:text="${user.firstName}"></Span>
+                <Span th:text="${user.lastName}"></Span><br />
+                <Span th:text="${user.email}"></Span><br />
+                <Span th:text="${user.followersCount}"></Span> followers<br />
+            </div><br/>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

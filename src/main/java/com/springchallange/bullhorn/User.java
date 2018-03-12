@@ -39,6 +39,8 @@ public class User {
     @Column(name="followers")
     private String[] followersName;
 
+    private int followersCount;
+
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "user")
@@ -170,5 +172,13 @@ public class User {
 
     public void setComments(Collection<Comment> comments) {
         this.comments = comments;
+    }
+
+    public int getFollowersCount() {
+        return followersCount;
+    }
+
+    public void setFollowersCount(int followersCount) {
+        this.followersCount = followersCount;
     }
 }
