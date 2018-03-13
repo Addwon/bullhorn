@@ -165,12 +165,21 @@ public class MainController {
         return "redirect:/";
     }
     //-------------------------display----------------------------------
+    //Show user profile
     @RequestMapping("/userprofile")
-    public String showFilteredNews(Model model,Authentication auth,User user)
+    public String showProfile(Model model,Authentication auth,User user)
     {
         user = userRepository.findByUsername(auth.getName());
         model.addAttribute("user", user);
         return "userprofile";
+    }
+    //Show user posts
+    @RequestMapping("/showpost")
+    public String showPost(Model model,Authentication auth,User user)
+    {
+        user = userRepository.findByUsername(auth.getName());
+        model.addAttribute("post", postRepository.findByUser(user));
+        return "showpost";
     }
     //----------------------- Edit -------------------------------------
     @RequestMapping(value="/edituserprofile/{id}",method=RequestMethod.GET)

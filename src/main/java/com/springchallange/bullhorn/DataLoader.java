@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -15,6 +18,8 @@ public class DataLoader implements CommandLineRunner {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    PostRepository postRepository;
 
     @Override
     public void run(String... strings) throws Exception{
@@ -44,6 +49,25 @@ public class DataLoader implements CommandLineRunner {
         user3.setRoles(Arrays.asList(userRole));
         userRepository.save(user3);
 
+        Date date = new Date();
+        //String strDateFormat = "hh:mm:ss a";
+        String strDateFormat = "h:mm - MMM d, yyyy";
+        DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+        String formattedDate= dateFormat.format(date);
+
+        Post post1=new Post();
+        post1.setPostImageUrl("http://res.cloudinary.com/addwon/image/upload/v1520976380/sk6fj5rfnpdz1a5clgzn.png");
+        post1.setPostMessage("My news aggregator website has been launched, #addisnews.");
+        post1.setPostDate(formattedDate);
+        post1.setUser(user2);
+        postRepository.save(post1);
+
+        Post post2=new Post();
+        post2.setPostImageUrl("http://res.cloudinary.com/addwon/image/upload/v1520963208/ihvbwoia4ctj9vcsxngm.jpg");
+        post2.setPostMessage("Have you seen Mesut Özil playing? #premierleague #arsenal, @MesutOzil1088");
+        post2.setPostDate(formattedDate);
+        post2.setUser(user3);
+        postRepository.save(post2);
 
     }
 }
