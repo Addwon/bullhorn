@@ -1,5 +1,6 @@
 package com.springchallange.bullhorn;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -9,6 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
+@DynamicUpdate
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

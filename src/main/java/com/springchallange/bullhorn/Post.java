@@ -19,7 +19,7 @@ public class Post {
 
     private int commentCount;
 
-    private Date postDate;
+    private String postDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = true)
@@ -33,7 +33,7 @@ public class Post {
     public Post() {
     }
 
-    public Post(String postMessage, String postImageUrl, int likeCount, int commentCount, Date postDate, User user) {
+    public Post(String postMessage, String postImageUrl, int likeCount, int commentCount, String postDate, User user) {
         this.postMessage = postMessage;
         this.postImageUrl = postImageUrl;
         this.likeCount = likeCount;
@@ -82,11 +82,11 @@ public class Post {
         this.commentCount = commentCount;
     }
 
-    public Date getPostDate() {
+    public String getPostDate() {
         return postDate;
     }
 
-    public void setPostDate(Date postDate) {
+    public void setPostDate(String postDate) {
         this.postDate = postDate;
     }
 

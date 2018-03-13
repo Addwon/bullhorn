@@ -39,7 +39,7 @@ public class DataLoader implements CommandLineRunner {
         userRepository.save(user2);
 
         User user3 = new User("bob@bob.com", "password", "Bob", "Marley", true, "Bob");
-        user2.setUserImageUrl("/images/UserImage.png");
+        user3.setUserImageUrl("http://res.cloudinary.com/addwon/image/upload/v1520885155/jlek6zcf96kjzoakxkes.png");
         user1.setFollowersCount(0);
         user3.setRoles(Arrays.asList(userRole));
         userRepository.save(user3);

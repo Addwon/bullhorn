@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Post</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
+
+</head>
+<body>
+<div th:replace="base :: navlinks"></div>
+
+<div class="container" >
+    <form action="#"
+          th:action="@{/postform}"
+          th:object="${post}"
+          enctype="multipart/form-data"
+          method="post">
+        <div class="col-3">
+            <input type="hidden" th:field="*{id}" />
+        </div>
+        <div class="col-6">
+            <label id="labelPost">Message</label><br/>
+            <textarea class="col-6" id="textPost" th:field="*{postMessage}" rows="3" placeholder="Post message"></textarea>
+            <span th:if="${#fields.hasErrors('postMessage')}" th:errors="*{postMessage}"></span>
+        </div><br/>
+        <div class="col-3">
+            <label id="labelImage">Image</label>
+            <input type="file" name="file" />
+        </div><br/>
+
+        <div class="col-3">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

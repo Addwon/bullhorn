@@ -12,6 +12,9 @@
 <h5>New User Registration</h5>
 
 <form autocomplete="off" action="#" th:action="@{/registration}" th:object="${user}" enctype="multipart/form-data" method="post">
+    <div class="col-3">
+        <input type="hidden" th:field="*{id}" />
+    </div>
     First Name <mark><strong><span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">First Name Error</span></strong></mark>
                 <input type="text" id="firstName" placeholder="First Name" th:field="*{firstName}"/><br />
     Last Name <mark><strong><span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">Last Name Error</span></strong></mark>
@@ -22,6 +25,9 @@
                 <input type="text" id="username" placeholder="Username" th:field="*{username}"/><br />
     Password <mark><strong><span th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</span></strong></mark>
              <input type="password" id="password" placeholder="Password" th:field="*{password}"/><br />
+    <div class="col-3">
+        <input type="hidden" name="file" th:field="*{userImageUrl}" />
+    </div>
     <div class="col-3">
         <label id="labelImage">Image</label>
         <input type="file" name="file" />

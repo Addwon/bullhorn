@@ -17,7 +17,9 @@
                 <Span th:text="${user.firstName}"></Span>
                 <Span th:text="${user.lastName}"></Span><br />
                 <Span th:text="${user.email}"></Span><br />
+                Username: <Span th:text="${user.username}"></Span><br />
                 <Span th:text="${user.followersCount}"></Span> followers<br />
+                <Span><a th:href="@{/edituserprofile/{id} (id=${user.id})}">Edit profile</a></Span><br />
             </div><br/>
 
         </div>

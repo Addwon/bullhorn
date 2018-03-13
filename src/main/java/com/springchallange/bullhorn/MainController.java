@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Controller
@@ -26,7 +28,11 @@ public class MainController {
     RoleRepository roleRepository;
 
     @Autowired
+    PostRepository postRepository;
+
+    @Autowired
     CloudinaryConfig cloudc;
+
 
     @RequestMapping("/login")
     public String login(){
@@ -64,7 +70,7 @@ public class MainController {
         }
 
     }*/
-
+    //-------------------------add--------------------------------------
     //For user registration
     @RequestMapping(value="/registration",method=RequestMethod.GET)
     public String showRegistrationPage(Model model){
@@ -75,21 +81,28 @@ public class MainController {
     @RequestMapping(value="/registration",method= RequestMethod.POST)
     public String processRegistrationPage(@Valid @ModelAttribute("user") User user, @RequestParam("file")MultipartFile file, BindingResult result,
                                           RedirectAttributes redirectAttributes){
+
         if(result.hasErrors()){
             return "registration";
         }
-        if(file.isEmpty()){
-            return "registration";
-        }
-        try{
-            Map uploadResult=cloudc.upload(file.getBytes(),
+        if(!file.isEmpty()){
+            try{
+      /*  if(file.isEmpty()){
+            System.out.println("Image url: "+user.getUserImageUrl());
+            Map uploadResult=cloudc.upload(user.getUserImageUrl().getBytes(),
                     ObjectUtils.asMap("resourcetype","auto"));
-            user.setUserImageUrl(uploadResult.get("url").toString());
-            //actorRepository.save(actor);
-        }catch (IOException e){
-            e.printStackTrace();
-            return "registration";
+        }*/
+                Map uploadResult=cloudc.upload(file.getBytes(),
+                        ObjectUtils.asMap("resourcetype","auto"));
+                user.setUserImageUrl(uploadResult.get("url").toString());
+
+
+            }catch (IOException e){
+                e.printStackTrace();
+                return "registration";
+            }
         }
+
 //        model.addAttribute("user",user);
         if(result.hasErrors()){
             return "registration";
@@ -106,6 +119,52 @@ public class MainController {
         return "redirect:/";
     }
 
+    //Post message
+    @RequestMapping(value="/postform",method=RequestMethod.GET)
+    public String showPostForm(Model model){
+        model.addAttribute("post",new Post());
+        return "postform";
+    }
+
+    @RequestMapping(value="/postform",method= RequestMethod.POST)
+    public String processPostPage(@Valid @ModelAttribute("post") Post post, @RequestParam("file")MultipartFile file, BindingResult result,User user,Authentication authentication,
+                                          RedirectAttributes redirectAttributes){
+
+        if(result.hasErrors()){
+            return "postform";
+        }
+        if(!file.isEmpty()){
+            try{
+
+                Map uploadResult=cloudc.upload(file.getBytes(),
+                        ObjectUtils.asMap("resourcetype","auto"));
+                post.setPostImageUrl(uploadResult.get("url").toString());
+
+
+            }catch (IOException e){
+                e.printStackTrace();
+                return "postform";
+            }
+        }
+
+        if(result.hasErrors()){
+            return "postform";
+        }else{
+            user=userRepository.findByUsername(authentication.getName());
+            post.setUser(user);
+
+            Date date = new Date();
+            //String strDateFormat = "hh:mm:ss a";
+            String strDateFormat = "h:mm - MMM d, yyyy";
+            DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+            String formattedDate= dateFormat.format(date);
+            post.setPostDate(formattedDate);
+            postRepository.save(post);
+
+        }
+        return "redirect:/";
+    }
+    //-------------------------display----------------------------------
     @RequestMapping("/userprofile")
     public String showFilteredNews(Model model,Authentication auth,User user)
     {
@@ -113,4 +172,11 @@ public class MainController {
         model.addAttribute("user", user);
         return "userprofile";
     }
+    //----------------------- Edit -------------------------------------
+    @RequestMapping(value="/edituserprofile/{id}",method=RequestMethod.GET)
+    public String editProfile(@PathVariable("id") long id, Model model){
+        model.addAttribute("user", userRepository.findOne(id));
+        return "registration";
+    }
+
 }
