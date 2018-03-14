@@ -2,24 +2,24 @@
 <html lang="en" xmlns:th="www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>User profile</title>
+    <title>Users list</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
 
 </head>
 <body>
 <div th:replace="base :: navlinks"></div>
 <div class="container">
-    <h5>Profile</h5>
-    <div class="card">
+    <!--<h5>Profile</h5>-->
+    <div class="card" th:each="user : ${user}">
         <div class="card-body">
-            <div th:each="user : ${user}">
+            <div >
                 <img class="img-rounded" th:src="${user.userImageUrl}" alt="User image" style="width:10%"/><br/>
                 <Span th:text="${user.firstName}"></Span>
                 <Span th:text="${user.lastName}"></Span><br />
                 <Span th:text="${user.email}"></Span><br />
                 Username: <Span th:text="${user.username}"></Span><br />
-                <Span th:text="${user.followersCount}"></Span> <a th:href="@{/showfollowers/{id} (id=${user.id})}">followers</a><br />
-                <Span><a th:href="@{/edituserprofile/{id} (id=${user.id})}">Edit profile</a></Span><br />
+                <Span th:text="${user.followersCount}"></Span> followers<br />
+                <Span><a th:href="@{/follow/{id} (id=${user.id})}">follow</a></Span><br />
             </div><br/>
 
         </div>

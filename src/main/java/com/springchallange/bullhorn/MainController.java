@@ -181,11 +181,42 @@ public class MainController {
         model.addAttribute("post", postRepository.findByUser(user));
         return "showpost";
     }
+    //Show users list
+    @RequestMapping("/userslist")
+    public String showUsersList(Model model)
+    {
+        model.addAttribute("user", userRepository.findAll());
+        return "userslist";
+    }
     //----------------------- Edit -------------------------------------
     @RequestMapping(value="/edituserprofile/{id}",method=RequestMethod.GET)
     public String editProfile(@PathVariable("id") long id, Model model){
         model.addAttribute("user", userRepository.findOne(id));
         return "registration";
     }
+    @RequestMapping("/follow/{id}")
+    public String userFollowsUsers(@PathVariable("id") long id,Authentication authentication, Model model){
+        User followingUser=userRepository.findByUsername(authentication.getName());
+        User followedUser=userRepository.findById(id);
+        followedUser.setFollowersCount(followedUser.getFollowersCount()+1);
+        //Add followed user to the follower list
+        Collection<User> following=new HashSet<>();
+        following.add(followedUser);
+        followingUser.setFollowing(following);
+        //Add following user to the list of followed users
+        Collection<User> followed=new HashSet<>();
+        followed.add(followingUser);
+        followedUser.setFollowers(followed);
+        userRepository.save(followedUser);
+        userRepository.save(followingUser);
+        model.addAttribute("user", userRepository.findAll());
+        return "redirect:/userslist";
+    }
 
+    @RequestMapping(value="/showfollowers/{id}",method=RequestMethod.GET)
+    public String showFollowers(@PathVariable("id") long id, Model model){
+        User user=userRepository.findOne(id);
+        model.addAttribute("user", userRepository.findByFollowing(user));
+        return "userslist";
+    }
 }

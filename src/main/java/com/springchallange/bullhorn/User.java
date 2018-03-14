@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -38,8 +39,8 @@ public class User {
     @Column(name="image")
     private String userImageUrl;
 
-    @Column(name="followers")
-    private String[] followersName;
+  /*  @Column(name="followers")
+    private String[] followersName;*/
 
     private int followersCount;
 
@@ -52,6 +53,16 @@ public class User {
             fetch = FetchType.LAZY,
             mappedBy = "user")
     private Collection<Comment> comments = new HashSet<>();
+
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "relation",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_id"))
+    private Collection<User> following;
+
+    @ManyToMany(mappedBy = "following")
+    private Collection<User> followers;
 
     @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(joinColumns=@JoinColumn(name = "user_id"),
@@ -74,9 +85,12 @@ public class User {
         this.roles = roles;
     }
 
+    public User(Collection<User> following, Collection<User> followers) {
+        this.following = following;
+        this.followers = followers;
+    }
 
-
-   /* public User() {
+ /* public User() {
         this.categories=new HashSet<>();
     }*/
 
@@ -152,13 +166,13 @@ public class User {
         this.userImageUrl = userImageUrl;
     }
 
-    public String[] getFollowersName() {
+  /*  public String[] getFollowersName() {
         return followersName;
     }
 
     public void setFollowersName(String[] followersName) {
         this.followersName = followersName;
-    }
+    }*/
 
     public Collection<Post> getPosts() {
         return posts;
@@ -182,5 +196,21 @@ public class User {
 
     public void setFollowersCount(int followersCount) {
         this.followersCount = followersCount;
+    }
+
+    public Collection<User> getFollowing() {
+        return following;
+    }
+
+    public void setFollowing(Collection<User> following) {
+        this.following = following;
+    }
+
+    public Collection<User> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(Collection<User> followers) {
+        this.followers = followers;
     }
 }
