@@ -11,7 +11,7 @@ public class Comment {
 
     private String commentMessage;
 
-    private Date commentDate;
+    private String commentDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "post_id", nullable = true)
@@ -24,7 +24,7 @@ public class Comment {
     public Comment() {
     }
 
-    public Comment(String commentMessage, Date commentDate, Post post, User user) {
+    public Comment(String commentMessage, String commentDate, Post post, User user) {
         this.commentMessage = commentMessage;
         this.commentDate = commentDate;
         this.post = post;
@@ -47,11 +47,11 @@ public class Comment {
         this.commentMessage = commentMessage;
     }
 
-    public Date getCommentDate() {
+    public String getCommentDate() {
         return commentDate;
     }
 
-    public void setCommentDate(Date commentDate) {
+    public void setCommentDate(String commentDate) {
         this.commentDate = commentDate;
     }
 

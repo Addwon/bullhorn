@@ -31,6 +31,9 @@ public class MainController {
     PostRepository postRepository;
 
     @Autowired
+    CommentRepository commentRepository;
+
+    @Autowired
     CloudinaryConfig cloudc;
 
 
@@ -162,7 +165,37 @@ public class MainController {
             postRepository.save(post);
 
         }
-        return "redirect:/";
+        return "redirect:/showallposts";
+    }
+    //Add comments
+    @RequestMapping(value="/commentonpost/{id}",method=RequestMethod.GET)
+    public String commentOnPost(@PathVariable("id") long id, Model model){
+        model.addAttribute("post", postRepository.findOne(id));
+        model.addAttribute("comment",new Comment());
+        return "commentform";
+    }
+    @RequestMapping(value="/commentform",method= RequestMethod.POST)
+    public String processCommentPost(@Valid @ModelAttribute("post") Post post,@Valid @ModelAttribute("comment") Comment comment, BindingResult result,User user,Authentication authentication,
+                                  RedirectAttributes redirectAttributes){
+
+        if(result.hasErrors()){
+            return "commentform";
+        }else{
+            user=userRepository.findByUsername(authentication.getName());
+
+            comment.setPost(post);
+            comment.setUser(user);
+            post.setCommentCount(post.getCommentCount()+1);
+            Date date = new Date();
+            //String strDateFormat = "hh:mm:ss a";
+            String strDateFormat = "h:mm - MMM d, yyyy";
+            DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+            String formattedDate= dateFormat.format(date);
+            comment.setCommentDate(formattedDate);
+            postRepository.save(post);
+            commentRepository.save(comment);
+        }
+        return "redirect:/showallposts";
     }
     //-------------------------display----------------------------------
     //Show user profile
@@ -187,6 +220,32 @@ public class MainController {
     {
         model.addAttribute("user", userRepository.findAll());
         return "userslist";
+    }
+
+    //Show all posts
+    @RequestMapping("/showallposts")
+    public String ShowAllPosts(Model model,Authentication auth,User user,Post post)
+    {
+        user=userRepository.findByUsername(auth.getName());
+
+        Collection<User> users=user.getFollowing();
+
+
+        for (User u :
+                users) {
+            model.addAttribute("post", postRepository.findByUser(u));
+            Collection<Post> posts=postRepository.findByUser(u);
+            for(Post p :
+                   posts ){
+                model.addAttribute("comment",commentRepository.findByPost(p));
+            }
+
+        }
+        //To show self post
+        //model.addAttribute("post", postRepository.findByUser(user));
+        //To show all posts
+        //model.addAttribute("post", postRepository.findAll());
+        return "showallposts";
     }
     //----------------------- Edit -------------------------------------
     @RequestMapping(value="/edituserprofile/{id}",method=RequestMethod.GET)
@@ -219,4 +278,17 @@ public class MainController {
         model.addAttribute("user", userRepository.findByFollowing(user));
         return "userslist";
     }
+
+    @RequestMapping("/likepost/{id}")
+    public String likePost(@PathVariable("id") long id,Authentication authentication, Model model){
+        Post post=postRepository.findOne(id);
+        //User user=userRepository.findByUsername(authentication.getName());
+        //post.setUser(user);
+        post.setLikeCount(post.getLikeCount()+1);
+        postRepository.save(post);
+        //model.addAttribute("post", postRepository.findAll());
+        return "redirect:/showallposts";
+    }
+
+
 }

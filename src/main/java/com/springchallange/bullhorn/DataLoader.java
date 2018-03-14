@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.HashSet;
 
 @Component
 public class DataLoader implements CommandLineRunner {
@@ -39,18 +41,17 @@ public class DataLoader implements CommandLineRunner {
 
         User user2=new User("user@user.com","password","Addis","Wondie",true,"Addis");
         user2.setUserImageUrl("/images/UserImage.png");
-        user1.setFollowersCount(0);
+        user2.setFollowersCount(0);
         user2.setRoles(Arrays.asList(userRole));
         userRepository.save(user2);
 
         User user3 = new User("bob@bob.com", "password", "Bob", "Marley", true, "Bob");
         user3.setUserImageUrl("http://res.cloudinary.com/addwon/image/upload/v1520885155/jlek6zcf96kjzoakxkes.png");
-        user1.setFollowersCount(0);
+        user3.setFollowersCount(0);
         user3.setRoles(Arrays.asList(userRole));
         userRepository.save(user3);
 
         Date date = new Date();
-        //String strDateFormat = "hh:mm:ss a";
         String strDateFormat = "h:mm - MMM d, yyyy";
         DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
         String formattedDate= dateFormat.format(date);

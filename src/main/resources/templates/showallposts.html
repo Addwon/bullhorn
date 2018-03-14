@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th="www.thymeleaf.org">
 <head>
     <meta charset="UTF-8" />
-    <title>Show post</title>
+    <title>Show all posts</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
 
 </head>
@@ -10,15 +10,20 @@
 <div th:replace="base :: navlinks"></div>
 <div class="container">
     <!--<h5>Profile</h5>-->
-    <div class="card">
+    <div class="card" th:each="post : ${post}" th:if="${post.postMessage != null}">
         <div class="card-body">
-            <div th:each="post : ${post}">
+            <div >
+                <Span th:text="${post.user.username}"></Span><br/>
                 <Span th:text="${post.postDate}"></Span><br/>
                 <Span th:text="${post.postMessage}"></Span><br />
                 <img class="img-rounded" th:src="${post.postImageUrl}" alt="Post image" style="width:50%"/><br/>
-                <Span th:text="${post.commentCount}"></Span> comments<br />
+                <a th:href="@{/commentonpost/{id} (id=${post.id})}">comments</a> <Span th:text="${post.commentCount}"></Span> <br />
                 <a th:href="@{/likepost/{id} (id=${post.id})}">like</a> <Span th:text="${post.likeCount}"> </Span><br />
                 <!--<Span><a th:href="@{/edituserprofile/{id} (id=${user.id})}">Edit profile</a></Span><br />-->
+                <div th:each="comment : ${comment}">
+                    <Span th:text="${comment.commentDate}"></Span><br/>
+                    <Span th:text="${comment.commentMessage}"></Span><br/>
+                </div>
             </div><br/>
 
         </div>

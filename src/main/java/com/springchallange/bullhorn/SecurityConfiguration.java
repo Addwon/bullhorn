@@ -36,7 +36,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter{
 //                .access("hasAnyAuthority('USER')or hasAnyAuthority('ADMIN')")
                 .anyRequest().authenticated()
                 .and()
-                .formLogin().loginPage("/login").defaultSuccessUrl("/showpost").permitAll()
+                .formLogin().loginPage("/login").defaultSuccessUrl("/showallposts").permitAll()
                 .and()
                 .logout().logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
                 .logoutSuccessUrl("/login").permitAll().permitAll()
