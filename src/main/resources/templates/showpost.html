@@ -16,9 +16,18 @@
                 <Span th:text="${post.postDate}"></Span><br/>
                 <Span th:text="${post.postMessage}"></Span><br />
                 <img class="img-rounded" th:src="${post.postImageUrl}" alt="Post image" style="width:50%"/><br/>
+                <Span th:text="${post.likeCount}"> </Span><a th:href="@{/likepost/{id} (id=${post.id})}">likes</a>
                 <Span th:text="${post.commentCount}"></Span> comments<br />
-                <a th:href="@{/likepost/{id} (id=${post.id})}">like</a> <Span th:text="${post.likeCount}"> </Span><br />
+
                 <!--<Span><a th:href="@{/edituserprofile/{id} (id=${user.id})}">Edit profile</a></Span><br />-->
+                <div style="indent-edge-reset: content-edge">
+                    <!--<p th:inline="text">[[${commentedby}]]</p>-->
+                    <div th:each="comment : ${comment}">
+                        <Span th:text="${comment.user.username}"></Span><br/>
+                        <Span th:text="${comment.commentDate}"></Span><br/>
+                        <Span th:text="${comment.commentMessage}"></Span><br/>
+                    </div>
+                </div>
             </div><br/>
 
         </div>

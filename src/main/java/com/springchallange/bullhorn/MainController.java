@@ -168,6 +168,40 @@ public class MainController {
         return "redirect:/showallposts";
     }
     //Add comments
+    public long postId=0;
+    @RequestMapping(value="/commentonpost/{id}",method=RequestMethod.GET)
+    public String commentOnPost(@PathVariable("id") long id, Model model){
+        model.addAttribute("post", postRepository.findOne(id));
+        postId=id;
+        model.addAttribute("comment",new Comment());
+        System.out.println("Post.id get mapping: "+id);
+        return "commentform";
+    }
+    @RequestMapping(value="/commentform",method= RequestMethod.POST)
+    public String processCommentPost(Post post,@Valid @ModelAttribute("comment") Comment comment, BindingResult result, Model model,User user,Authentication authentication,
+                                    RedirectAttributes redirectAttributes){
+
+        if(result.hasErrors()){
+            return "commentform";
+        }else{
+            user=userRepository.findByUsername(authentication.getName());
+            post=postRepository.findOne(postId);
+            System.out.println("Post.id post mapping: "+post.getId());
+            comment.setPost(post);
+            comment.setUser(user);
+            post.setCommentCount(post.getCommentCount()+1);
+            Date date = new Date();
+            //String strDateFormat = "hh:mm:ss a";
+            String strDateFormat = "h:mm - MMM d, yyyy";
+            DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+            String formattedDate= dateFormat.format(date);
+            comment.setCommentDate(formattedDate);
+            postRepository.save(post);
+            commentRepository.save(comment);
+        }
+        return "redirect:/showallposts";
+    }
+    /*//Add comments
     @RequestMapping(value="/commentonpost/{id}",method=RequestMethod.GET)
     public String commentOnPost(@PathVariable("id") long id, Model model){
         model.addAttribute("post", postRepository.findOne(id));
@@ -196,7 +230,7 @@ public class MainController {
             commentRepository.save(comment);
         }
         return "redirect:/showallposts";
-    }
+    }*/
     //-------------------------display----------------------------------
     //Show user profile
     @RequestMapping("/userprofile")
@@ -211,7 +245,19 @@ public class MainController {
     public String showPost(Model model,Authentication auth,User user)
     {
         user = userRepository.findByUsername(auth.getName());
-        model.addAttribute("post", postRepository.findByUser(user));
+        //model.addAttribute("post", postRepository.findByUser(user));
+     /*   Collection<User> users=user.getFollowing();
+
+        for (User u :
+                users) {*/
+            model.addAttribute("post", postRepository.findByUserOrderByPostDateDesc(user));
+            Collection<Post> posts=postRepository.findByUserOrderByPostDateDesc(user);
+            for(Post p :
+                    posts ){
+                model.addAttribute("comment",commentRepository.findByPostOrderByCommentDateDesc(p));
+            }
+
+       // }
         return "showpost";
     }
     //Show users list
@@ -230,14 +276,13 @@ public class MainController {
 
         Collection<User> users=user.getFollowing();
 
-
         for (User u :
                 users) {
-            model.addAttribute("post", postRepository.findByUser(u));
-            Collection<Post> posts=postRepository.findByUser(u);
+            model.addAttribute("post", postRepository.findByUserOrderByPostDateDesc(u));
+            Collection<Post> posts=postRepository.findByUserOrderByPostDateDesc(u);
             for(Post p :
                    posts ){
-                model.addAttribute("comment",commentRepository.findByPost(p));
+                model.addAttribute("comment",commentRepository.findByPostOrderByCommentDateDesc(p));
             }
 
         }

@@ -6,4 +6,6 @@ import java.util.List;
 
 public interface CommentRepository extends CrudRepository<Comment,Long> {
     List<Comment> findByPost(Post post);
+
+    List<Comment> findByPostOrderByCommentDateDesc(Post post);
 }
