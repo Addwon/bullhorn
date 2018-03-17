@@ -44,13 +44,13 @@ public class DataLoader implements CommandLineRunner {
 
         User user2=new User("user@user.com","password","Addis","Wondie",true,"Addis");
         user2.setUserImageUrl("/images/UserImage.png");
-        user2.setFollowersCount(0);
+        //user2.setFollowersCount(0);
         user2.setRoles(Arrays.asList(userRole));
         userRepository.save(user2);
 
         User user3 = new User("bob@bob.com", "password", "Bob", "Marley", true, "Bob");
         user3.setUserImageUrl("http://res.cloudinary.com/addwon/image/upload/v1520885155/jlek6zcf96kjzoakxkes.png");
-        user3.setFollowersCount(0);
+        //user3.setFollowersCount(0);
         user3.setRoles(Arrays.asList(userRole));
         userRepository.save(user3);
 
@@ -58,10 +58,12 @@ public class DataLoader implements CommandLineRunner {
         u2.add(user3);
         user2.setFollowing(u2);
         user2.setFollowingCount(user2.getFollowingCount()+1);
-        u2.add(user2);
-        user3.setFollowers(u2);
-        user3.setFollowersCount(user3.getFollowersCount()+1);
         userRepository.save(user2);
+
+        Collection<User> u3=new HashSet<>();
+        u3.add(user2);
+        user3.setFollowers(u3);
+        user3.setFollowersCount(user3.getFollowersCount()+1);
         userRepository.save(user3);
 
         Date date = new Date();
