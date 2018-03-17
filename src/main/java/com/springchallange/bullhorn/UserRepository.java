@@ -13,5 +13,6 @@ public interface UserRepository extends CrudRepository<User,Long> {
     Long countByUsername(String username);
     User findDistinctByRoles(String role);
     Collection<User>findByFollowing(User user);
+    Collection<User>findByRoles(Role role);
 
 }

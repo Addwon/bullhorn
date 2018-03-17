@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.tymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8" />
     <title>Show post</title>
@@ -15,9 +15,9 @@
             <div th:each="post : ${post}">
                 <Span th:text="${post.postDate}"></Span><br/>
                 <Span th:text="${post.postMessage}"></Span><br />
-                <img class="img-rounded" th:src="${post.postImageUrl}" alt="Post image" style="width:50%"/><br/>
-                <Span th:text="${post.likeCount}"> </Span><a th:href="@{/likepost/{id} (id=${post.id})}">likes</a>
-                <Span th:text="${post.commentCount}"></Span> comments<br />
+                <img class="img-rounded" th:src="${post.postImageUrl}" alt="Post image" style="width:400px"/><br/>
+                <Span th:text="${post.likeCount}"> </Span><a th:href="@{/likepost/{id} (id=${post.id})}" sec:authorize="isAuthenticated()"> likes</a>
+                <Span th:text="${post.commentCount}"></Span> <Span><a th:href="@{/commentonpost/{id} (id=${post.id})}"> comments</a></Span><br />
 
                 <!--<Span><a th:href="@{/edituserprofile/{id} (id=${user.id})}">Edit profile</a></Span><br />-->
                 <div style="indent-edge-reset: content-edge">

@@ -44,6 +44,10 @@ public class User {
 
     private int followersCount;
 
+    private int followingCount;
+
+    private int postCount;
+
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,
             mappedBy = "user")
@@ -212,5 +216,21 @@ public class User {
 
     public void setFollowers(Collection<User> followers) {
         this.followers = followers;
+    }
+
+    public int getFollowingCount() {
+        return followingCount;
+    }
+
+    public void setFollowingCount(int followingCount) {
+        this.followingCount = followingCount;
+    }
+
+    public int getPostCount() {
+        return postCount;
+    }
+
+    public void setPostCount(int postCount) {
+        this.postCount = postCount;
     }
 }

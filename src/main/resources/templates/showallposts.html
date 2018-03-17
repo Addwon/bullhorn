@@ -1,13 +1,99 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="www.thymeleaf.org">
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.tymeleaf.org/thymeleaf-extras-springsecurity4">
 <head>
     <meta charset="UTF-8" />
     <title>Show all posts</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"/>
-
+    <link href="/css/style.css" rel="stylesheet"/>
 </head>
 <body>
 <div th:replace="base :: navlinks"></div>
+<div class="container" th:each="user : ${user}">
+    <div class="row">
+        <div class="col-sm-3">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <a href="#"><img class="img-responsive" th:src="${user.userImageUrl}" alt="User image" /></a>
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <h5>
+                                <small>POSTS</small>
+                                <a href="#"><Span th:text="${user.postCount}"> </Span></a>
+                            </h5>
+                        </div>
+                        <div class="col-xs-4">
+                            <h5>
+                                <small>FOLLOWING</small>
+                                <a href="#"><Span th:text="${user.followingCount}"> </Span></a>
+                            </h5>
+                        </div>
+                        <div class="col-xs-5">
+                            <h5>
+                                <small>FOLLOWERS</small>
+                                <a href="#"><Span th:text="${user.followersCount}"> </Span></a>
+                            </h5>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!--<div class="col-sm-6">-->
+    <!--<div class="panel panel-info">-->
+        <!--&lt;!&ndash;<div class="panel-heading">-->
+            <!--<div class="media">-->
+                <!--<a class="media-left" href="#fake">-->
+                    <!--<img alt="" class="media-object img-rounded" src="http://placehold.it/35x35"/>-->
+                <!--</a>-->
+                <!--<div class="media-body">-->
+                    <!--<div class="form-group has-feedback">-->
+                        <!--<label class="control-label sr-only" >Hidden label</label>-->
+                        <!--<input type="text" class="form-control"  aria-describedby="search"/>-->
+                        <!--<span class="glyphicon glyphicon-camera form-control-feedback" aria-hidden="true"></span>-->
+                        <!--<span  class="sr-only">(success)</span>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>&ndash;&gt;-->
+<!--<div class="panel-body" th:each="post : ${post}" th:if="${post.postMessage != null}">-->
+    <!--<div class="media">-->
+        <!--<a class="media-left" href="#">-->
+            <!--<img alt="" class="media-object img-rounded" th:src="${post.postImageUrl}" style="width:64px"/>-->
+        <!--</a>-->
+        <!--<div class="media-body">-->
+            <!--&lt;!&ndash;<h4 class="media-heading">Media heading</h4>&ndash;&gt;-->
+            <!--<Span th:text="${post.user.username}"></Span><br/>-->
+            <!--<Span th:text="${post.postDate}"></Span><br/>-->
+            <!--<p th:text="${post.postMessage}"></p>-->
+            <!--<ul class="nav nav-pills nav-pills-custom">-->
+                <!--&lt;!&ndash;<li><a href="#"><span class="glyphicon glyphicon-share-alt"></span></a></li>&ndash;&gt;-->
+                <!--<li>-->
+                    <!--<Span th:text="${post.likeCount}"> </Span><a th:href="@{/likepost/{id} (id=${post.id})}" sec:authorize="isAuthenticated()"> likes</a>-->
+                <!--</li>-->
+                <!--<li>-->
+                    <!--<Span th:text="${post.commentCount}"> </Span><span><a th:href="@{/commentonpost/{id} (id=${post.id})}"> comments</a></span>  <br />-->
+
+                <!--</li>-->
+                <!--<li><a href="#"><span class="glyphicon glyphicon-retweet"></span></a></li>-->
+                <!--<li><a href="#"><span class="glyphicon glyphicon-star"></span></a></li>-->
+                <!--<li><a href="#"><span class="glyphicon glyphicon-option-horizontal"></span></a></li>-->
+            <!--</ul>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+    <!--</div>-->
+<!--</div>-->
+    </div>
+</div>
+
+<!--<div class="container" th:each="user : ${user}">
+    <div >
+        <img class="img-rounded" th:src="${user.userImageUrl}" alt="User image" style="width:10%"/><br/>
+        <Span th:text="${user.postCount}"> </Span> Posts<br/>
+        <Span th:text="${user.followersCount}"> </Span> Followers<br/>
+        <Span th:text="${user.followingCount}"> </Span> Following<br/>
+    </div>
+</div>-->
 <div class="container">
     <!--<h5>Profile</h5>-->
     <div class="card" th:each="post : ${post}" th:if="${post.postMessage != null}">
@@ -16,9 +102,9 @@
                 <Span th:text="${post.user.username}"></Span><br/>
                 <Span th:text="${post.postDate}"></Span><br/>
                 <Span th:text="${post.postMessage}"></Span><br />
-                <img class="img-rounded" th:src="${post.postImageUrl}" alt="Post image" style="width:50%"/><br/>
-                <Span th:text="${post.likeCount}"> </Span><a th:href="@{/likepost/{id} (id=${post.id})}">likes</a>
-                <a th:href="@{/commentonpost/{id} (id=${post.id})}">comments</a> <Span th:text="${post.commentCount}"></Span> <br />
+                <img class="img-rounded" th:src="${post.postImageUrl}" alt="Post image" style="width:400px"/><br/>
+                <Span th:text="${post.likeCount}"> </Span><a th:href="@{/likepost/{id} (id=${post.id})}" sec:authorize="isAuthenticated()"> likes</a>
+                <Span th:text="${post.commentCount}"> </Span><span><a th:href="@{/commentonpost/{id} (id=${post.id})}"> comments</a></span>  <br />
 
                 <!--<Span><a th:href="@{/edituserprofile/{id} (id=${user.id})}">Edit profile</a></Span><br />-->
                 <div style="indent-edge-reset: content-edge">

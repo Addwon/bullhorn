@@ -48,31 +48,6 @@ public class MainController {
        return "index";
     }
 
-/*    //User registration
-    @RequestMapping(value="/registration",method= RequestMethod.GET)
-    public String showRegistrationPage(Model model){
-        //model.addAttribute("classActiveSettings6","nav-item active");
-        model.addAttribute("user",new User());
-        return "registration";
-    }
-    @RequestMapping(value="/registration",method= RequestMethod.POST)
-    public String processRegistrationPage(@Valid @ModelAttribute("user") User user, BindingResult result, Model model){
-
-        if(result.hasErrors()){
-            return "registration";
-        }else{
-            user.setEnabled(true);
-            //Role role =roleRepository.findByRole("USER");
-            user.setRoles(Arrays.asList(roleRepository.findByRole("USER")));
-
-            System.out.println("user reg.post[role.getRole(): "+user.getRoles());
-            //user.setRoles(role.getRole());
-
-            userRepository.save(user);
-            return "redirect:/";
-        }
-
-    }*/
     //-------------------------add--------------------------------------
     //For user registration
     @RequestMapping(value="/registration",method=RequestMethod.GET)
@@ -90,11 +65,7 @@ public class MainController {
         }
         if(!file.isEmpty()){
             try{
-      /*  if(file.isEmpty()){
-            System.out.println("Image url: "+user.getUserImageUrl());
-            Map uploadResult=cloudc.upload(user.getUserImageUrl().getBytes(),
-                    ObjectUtils.asMap("resourcetype","auto"));
-        }*/
+
                 Map uploadResult=cloudc.upload(file.getBytes(),
                         ObjectUtils.asMap("resourcetype","auto"));
                 user.setUserImageUrl(uploadResult.get("url").toString());
@@ -106,18 +77,13 @@ public class MainController {
             }
         }
 
-//        model.addAttribute("user",user);
         if(result.hasErrors()){
             return "registration";
         }else{
             user.setEnabled(true);
-            //Role role =roleRepository.findByRole("USER");
             user.setRoles(Arrays.asList(roleRepository.findByRole("USER")));
-
             System.out.println("user reg.post[role.getRole(): "+user.getRoles());
-            //user.setRoles(role.getRole());
             userRepository.save(user);
-//            model.addAttribute("message","User Account Successfully Created");
         }
         return "redirect:/";
     }
@@ -157,11 +123,11 @@ public class MainController {
             post.setUser(user);
 
             Date date = new Date();
-            //String strDateFormat = "hh:mm:ss a";
             String strDateFormat = "h:mm - MMM d, yyyy";
             DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
             String formattedDate= dateFormat.format(date);
             post.setPostDate(formattedDate);
+            post.getUser().setPostCount(post.getUser().getPostCount()+1);
             postRepository.save(post);
 
         }
@@ -201,36 +167,7 @@ public class MainController {
         }
         return "redirect:/showallposts";
     }
-    /*//Add comments
-    @RequestMapping(value="/commentonpost/{id}",method=RequestMethod.GET)
-    public String commentOnPost(@PathVariable("id") long id, Model model){
-        model.addAttribute("post", postRepository.findOne(id));
-        model.addAttribute("comment",new Comment());
-        return "commentform";
-    }
-    @RequestMapping(value="/commentform",method= RequestMethod.POST)
-    public String processCommentPost(@Valid @ModelAttribute("post") Post post,@Valid @ModelAttribute("comment") Comment comment, BindingResult result,User user,Authentication authentication,
-                                  RedirectAttributes redirectAttributes){
 
-        if(result.hasErrors()){
-            return "commentform";
-        }else{
-            user=userRepository.findByUsername(authentication.getName());
-
-            comment.setPost(post);
-            comment.setUser(user);
-            post.setCommentCount(post.getCommentCount()+1);
-            Date date = new Date();
-            //String strDateFormat = "hh:mm:ss a";
-            String strDateFormat = "h:mm - MMM d, yyyy";
-            DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
-            String formattedDate= dateFormat.format(date);
-            comment.setCommentDate(formattedDate);
-            postRepository.save(post);
-            commentRepository.save(comment);
-        }
-        return "redirect:/showallposts";
-    }*/
     //-------------------------display----------------------------------
     //Show user profile
     @RequestMapping("/userprofile")
@@ -245,11 +182,6 @@ public class MainController {
     public String showPost(Model model,Authentication auth,User user)
     {
         user = userRepository.findByUsername(auth.getName());
-        //model.addAttribute("post", postRepository.findByUser(user));
-     /*   Collection<User> users=user.getFollowing();
-
-        for (User u :
-                users) {*/
             model.addAttribute("post", postRepository.findByUserOrderByPostDateDesc(user));
             Collection<Post> posts=postRepository.findByUserOrderByPostDateDesc(user);
             for(Post p :
@@ -257,14 +189,15 @@ public class MainController {
                 model.addAttribute("comment",commentRepository.findByPostOrderByCommentDateDesc(p));
             }
 
-       // }
         return "showpost";
     }
     //Show users list
     @RequestMapping("/userslist")
     public String showUsersList(Model model)
     {
-        model.addAttribute("user", userRepository.findAll());
+        //model.addAttribute("user", userRepository.findAll());
+        Role role=roleRepository.findByRole("User");
+        model.addAttribute("user", userRepository.findByRoles(role));
         return "userslist";
     }
 
@@ -273,7 +206,7 @@ public class MainController {
     public String ShowAllPosts(Model model,Authentication auth,User user,Post post)
     {
         user=userRepository.findByUsername(auth.getName());
-
+        model.addAttribute("user",user);
         Collection<User> users=user.getFollowing();
 
         for (User u :
@@ -286,10 +219,7 @@ public class MainController {
             }
 
         }
-        //To show self post
-        //model.addAttribute("post", postRepository.findByUser(user));
-        //To show all posts
-        //model.addAttribute("post", postRepository.findAll());
+
         return "showallposts";
     }
     //----------------------- Edit -------------------------------------
@@ -307,10 +237,12 @@ public class MainController {
         Collection<User> following=new HashSet<>();
         following.add(followedUser);
         followingUser.setFollowing(following);
+        followingUser.setFollowingCount(followingUser.getFollowingCount()+1);
         //Add following user to the list of followed users
         Collection<User> followed=new HashSet<>();
         followed.add(followingUser);
         followedUser.setFollowers(followed);
+        followedUser.setFollowersCount(followedUser.getFollowersCount()+1);
         userRepository.save(followedUser);
         userRepository.save(followingUser);
         model.addAttribute("user", userRepository.findAll());
@@ -327,11 +259,8 @@ public class MainController {
     @RequestMapping("/likepost/{id}")
     public String likePost(@PathVariable("id") long id,Authentication authentication, Model model){
         Post post=postRepository.findOne(id);
-        //User user=userRepository.findByUsername(authentication.getName());
-        //post.setUser(user);
         post.setLikeCount(post.getLikeCount()+1);
         postRepository.save(post);
-        //model.addAttribute("post", postRepository.findAll());
         return "redirect:/showallposts";
     }
 
